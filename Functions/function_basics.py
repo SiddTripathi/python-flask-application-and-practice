@@ -20,5 +20,5 @@ def age_in_months_func():
 
 
 print('Welcome to the age in months calculator')
-age_in_months_func()
+age_in_months_func()  #calling the function
 print('Thank you for using the age in months calculator')
