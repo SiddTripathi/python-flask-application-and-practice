@@ -11,8 +11,8 @@ from numpy import divide
 def add_sub(a,b):
     return a+b, a-b
 
-sum, difference = add_sub(5,3) #here we are unpacking the tuple returned by the function add_sub. Destructoring the tuple
-print(f"The sum of two number is {sum} and the difference is {difference}")
+sum_num, difference = add_sub(5,3) #here we are unpacking the tuple returned by the function add_sub. Destructoring the tuple
+print(f"The sum of two number is {sum_num} and the difference is {difference}")
 #The function add_sub returns two values - sum and difference of the numbers. The values are returned as a tuple. The tuple is stored in the variable result.
 
 
