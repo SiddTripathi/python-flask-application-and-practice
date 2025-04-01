@@ -31,7 +31,7 @@ else:
 # The dictionary must contain three keys: 'name', 'school', and 'grades'.
 # The values for each must be 'Jose', 'Computing', and a tuple with the values 66, 77, and 88.
 
-student = {'name': 'Jose', 'school': 'Computing', 'grades': (66, 77, 88)}
+students = {'name': 'Jose', 'school': 'Computing', 'grades': (66, 77, 88)}
 # Assume the argument, data, is a dictionary.
 # Modify the grades variable so it accesses the 'grades' key of the data dictionary.
 
