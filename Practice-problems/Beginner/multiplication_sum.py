@@ -11,7 +11,7 @@ def calculate_sum_product(num1: int, num2: int):
         return f"Product>1000. Sum = {num1+num2}"
     
 
-num1 = int(input("Enter the first number - "))
-num2 = int(input("Enter the Second number - "))
+num_1 = int(input("Enter the first number - "))
+num_2 = int(input("Enter the Second number - "))
 
-print(calculate_sum_product(num1,num2))
+print(calculate_sum_product(num_1,num_2))
