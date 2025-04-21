@@ -3,7 +3,7 @@
 #and we can pass that information in decorator
 
 import functools
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 #decorator
 def make_secure(access_level: str) -> Callable:

@@ -18,7 +18,6 @@
 
 # Example usage of first-class functions will demonstrate these concepts.
 
-import operator
 
 
 def divide(dividend, divisor):
