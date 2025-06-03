@@ -3,6 +3,7 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from ..db import stores
+from ..schemas import StoreSchema
 
 blp = Blueprint("stores",__name__, description="Operations on stores")
 
@@ -11,14 +12,16 @@ blp = Blueprint("stores",__name__, description="Operations on stores")
 
 @blp.route("/store")
 class GetStore(MethodView):
+    @blp.response(200, StoreSchema(many=True))
     def get(self):
-        return {"stores":list(stores.values())}
-    
-    def post(self):
-        store_data = request.get_json() #the request converts json string to python dictionary. Request here is basically body which will be send along with get request
-        if "name" not in store_data:
-            abort(400, message="Bad Request. 'name' should be present in JSON payload",)
-    
+        return stores.values()
+        #return {"stores":list(stores.values())} --> refer items.py for this explanation
+    @blp.arguments(StoreSchema)
+    @blp.response(201, StoreSchema)
+    def post(self,store_data):
+        #store_data = request.get_json() #the request converts json string to python dictionary. 
+        # Request here is basically body which will be send along with get request. This is commented because now we are using marshmallow for data validation
+        # and json request body
         for store in stores.values():
             if store_data["name"] == store["name"]:
                  abort(400, message="Store already exist. Try adding new name",)

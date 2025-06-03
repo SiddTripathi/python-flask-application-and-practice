@@ -2,6 +2,8 @@ import uuid
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+
+from ..schemas import ItemSchema, ItemUpdateSchema
 from ..db import stores,items
 
 
@@ -10,16 +12,16 @@ blp = Blueprint("items",__name__, description="Operations on items")
 
 @blp.route("/item")
 class ItemList(MethodView):
+    @blp.response(200, ItemSchema(many=True))
     def get(self):
-        return {"items": list(items.values())}
+        return items.values()
 
-    def post(self):
-        item_data = request.get_json()
-        if(
-            "price" not in item_data or "store_id" not in item_data
-             or "name" not in item_data 
-            ):
-            abort(400,message="Bad Request !!. Ensure 'price', 'store_id', and 'name' are included in JSON payload",)
+        #return {"items": list(items.values())}   --> this is replaced by marshmallow response method returning multiple items in Schema
+        # The mashmallow returns a list instead of object
+
+    @blp.arguments(ItemSchema)
+    @blp.response(201, ItemSchema)
+    def post(self,item_data):
         for item in items.values():
             if(item_data["name"] == item["name"]):
                 abort(400,message="Item already exist",)
@@ -33,18 +35,18 @@ class ItemList(MethodView):
 
 @blp.route("/item/<string:item_id>")
 class Item(MethodView):
+    @blp.response(200, ItemSchema)
     def get(self,item_id):
         try:
             return items[item_id]
         except KeyError:
             abort(404, message="Item not found")
 
-    def update(self,item_id):
+    @blp.arguments(ItemUpdateSchema)
+    @blp.response(200, ItemSchema)              #keep in mind that order of decorators matter. Best practice to keep response deco nested deeper compared to argument
+    def update(self,item_data,item_id):
         item_data = request.get_json()
-        if(
-             "price" not in item_data or "name" not in item_data 
-            ):
-            abort(400,message="Bad Request !!. Ensure 'price', 'store_id', and 'name' are included in JSON payload",)
+
         #this below is more optimised way
         try:
              item = items[item_id]
