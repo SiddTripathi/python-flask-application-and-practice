@@ -1,10 +1,9 @@
 from sqlite3 import IntegrityError
-import uuid
-from flask import request
+
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
-from Flask_App_Store.models.stores import StoreModel
+from ..models.stores import StoreModel
 from sqlalchemy.exc import SQLAlchemyError
 
 from ..db import db
@@ -33,6 +32,7 @@ class GetStore(MethodView):
             abort(400, message="Store with that name already exists")
         except SQLAlchemyError:
             abort(500,message="An error occured while creating a Store")
+        return store
 
 #<----------OLD CODE - Just for reference ---------->
 

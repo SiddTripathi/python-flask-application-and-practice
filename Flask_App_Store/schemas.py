@@ -5,7 +5,7 @@ from marshmallow import Schema, fields
 
 #this item schema does not deals with stores at all. Just fetches item related information
 class PlainItemSchema(Schema):
-    id = fields.Str(dump_only=True) #dump_only means that it cannot be part of send request but only be generated and returned
+    id = fields.Int(dump_only=True) #dump_only means that it cannot be part of send request but only be generated and returned
     name = fields.Str(required=True) #data validation
     price=fields.Float(required=True)
     
@@ -17,16 +17,43 @@ class ItemUpdateSchema(Schema):
     store_id = fields.Int()
 
 class PlainStoreSchema(Schema):
-    id = fields.Str(dump_only=True)
+    id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
+
+class PlainTagSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str()
+
 
 class ItemSchema(PlainItemSchema):
     store_id = fields.Int(required=True,load_only=True) #this schema can be used to pass store id in request to fetch item details about the items of that store
     store = fields.Nested(PlainStoreSchema(),dump_only=True) #only used when returning the data of nested store within item
+    tags = fields.List(fields.Nested(PlainTagSchema()),dump_only=True)
 
 class StoreSchema(PlainStoreSchema):
     items = fields.List(fields.Nested(PlainItemSchema()),dump_only=True)
-       
+    tags = fields.List(fields.Nested(PlainTagSchema()),dump_only=True)
+
+class TagSchema(PlainTagSchema):
+    store_id = fields.Int(load_only=True) #this schema can be used to pass store id in request to fetch tag details about the items of that store
+    store = fields.Nested(PlainStoreSchema(),dump_only=True)
+    items = fields.List(fields.Nested(PlainItemSchema()),dump_only=True)
+
+class UserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+    password = fields.Str(required=True, load_only=True) #load_only ensures that password is not returned ever to the client
+
+
+class TagItemSchema(Schema):
+    message = fields.Str()
+    item  = fields.Nested(ItemSchema)
+    tag = fields.Nested(TagSchema)
+
+
+
+
+
 
 
 #########  SIMPLE EXPLANATION OF WHY WE USE PLAIN SCHEMA ######################

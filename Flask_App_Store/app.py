@@ -1,11 +1,14 @@
 
 import os
 from flask import Flask
+from flask_jwt_extended import JWTManager
+
 from flask_smorest import Api
 from .db import db
-from .models import StoreModel, ItemModel
+#from .models import StoreModel, ItemModel
 from .resources.item import blp as ItemBlueprint
 from .resources.store import blp as StoreBlueprint
+from .resources.tag import blp as TagBlueprint
 
 
 def create_app(db_url=None):
@@ -28,6 +31,8 @@ def create_app(db_url=None):
 
     db.init_app(app) #initialises sqlalchemy extension passing in our flask app so that sql alchemy can connect with it
     api = Api(app) #connects flask smorest extension with flask app
+    app.config["JWT_SECRET_KEY"] = "83895029357195414167268476135934579751"
+    jwt = JWTManager(app)
     with app.app_context():  # Ensures that all tables are created in the database if they do not already exist when the app starts. Note: It does not update existing tables; migrations are required for schema changes.
         db.create_all()
 
@@ -35,4 +40,5 @@ def create_app(db_url=None):
 
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(StoreBlueprint)
+    api.register_blueprint(TagBlueprint)
     return app

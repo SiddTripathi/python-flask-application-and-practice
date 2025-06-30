@@ -3,9 +3,9 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
-
+from ..models.items import ItemModel
 from ..db import db
-from Flask_App_Store.models.items import ItemModel
+
 
 from ..schemas import ItemSchema, ItemUpdateSchema
 
