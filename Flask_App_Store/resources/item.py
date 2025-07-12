@@ -1,5 +1,5 @@
-import uuid
-from flask import request
+from flask_jwt_extended import get_jwt, jwt_required
+
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
@@ -16,13 +16,14 @@ blp = Blueprint("items",__name__, description="Operations on items")
 
 @blp.route("/item")
 class ItemList(MethodView):
+    @jwt_required(fresh=True)
     @blp.response(200, ItemSchema(many=True))
     def get(self):
         return ItemModel.query.all()
 
         #return {"items": list(items.values())}   --> this is replaced by marshmallow response method returning multiple items in Schema
         # The mashmallow returns a list instead of object
-
+    @jwt_required(fresh=True)
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
     def post(self,item_data):
@@ -37,7 +38,7 @@ class ItemList(MethodView):
         return item,201
 
 
-@blp.route("/item/<string:item_id>")
+@blp.route("/item/<int:item_id>")
 class Item(MethodView):
     @blp.response(200, ItemSchema)
     def get(self,item_id):
@@ -57,8 +58,12 @@ class Item(MethodView):
         db.session.add(item)
         db.session.commit()
         return item
-    
+    @jwt_required(fresh=True)
     def delete(self,item_id):
+        jwt = get_jwt()
+        print(get_jwt())
+        if not jwt.get("is_admin", False):
+            abort(401, message="Admin permissions needed")
         item = ItemModel.query.get_or_404(item_id)
         db.session.delete(item)
         db.session.commit()

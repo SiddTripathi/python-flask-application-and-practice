@@ -1,4 +1,4 @@
-from enum import unique
+
 
 from ..db import db
 
@@ -14,5 +14,5 @@ class ItemModel(db.Model):
         db.Integer, db.ForeignKey("stores.id"), unique=False, nullable=False
     )
     store = db.relationship("StoreModel", back_populates="items")
-    tag  = db.relationship("TagModel", back_populates="items", secondary="items_tags")
+    tags  = db.relationship("TagModel", back_populates="items", secondary="items_tags")
     

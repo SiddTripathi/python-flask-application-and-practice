@@ -62,8 +62,9 @@ class GetStore(MethodView):
 # So we need to use a database to store the data. We can use SQLite or any other database to store the data. But for now, we will use a list to store the data. 
 # In future, we will use a database to store the data.
 """
-@blp.route("/store/<string:store_id>")
+@blp.route("/store/<int:store_id>")
 class Store(MethodView):
+    @blp.response(200, StoreSchema)
     def get(self,store_id):
         store = StoreModel.query.get_or_404(store_id)
         return store
