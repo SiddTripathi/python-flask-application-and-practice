@@ -2,7 +2,8 @@
 import os
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
-
+from flask_migrate import Migrate
+from .blocklist import BLOCKLIST
 from flask_smorest import Api
 from .db import db
 #from .models import StoreModel, ItemModel
@@ -31,6 +32,7 @@ def create_app(db_url=None):
                                                                                            # will use value of DATABASE_URL or default to sqllite...)
 
     db.init_app(app) #initialises sqlalchemy extension passing in our flask app so that sql alchemy can connect with it
+    migrate = Migrate(app,db)
     api = Api(app) #connects flask smorest extension with flask app
     app.config["JWT_SECRET_KEY"] = "83895029357195414167268476135934579751"
     jwt = JWTManager(app)
@@ -47,7 +49,18 @@ one possible use case for claims are access level control, which is shown below
             return{"is_admin": True}
         return{"is_admin": False}
 
-   
+    @jwt.token_in_blocklist_loader
+    def check_if_token_in_blocklist(jwt_header,jwt_payload):
+        return jwt_payload["jti"] in BLOCKLIST
+
+    @jwt.revoked_token_loader
+    def revoked_token_callback(jwt_header,jwt_payload):
+        return(
+            jsonify(
+                {"description": "The token has been revoked","error": "token_revoked"}
+            ),401
+        )
+
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
         return (
@@ -64,9 +77,19 @@ one possible use case for claims are access level control, which is shown below
         return(
             jsonify({"message":"Request does not contain access token","error":"authorization_required"}),401,
         )
+    @jwt.needs_fresh_token_loader
+    def token_not_fresh_callback(jwt_header, jwt_payload):
+        return(
+            jsonify({
 
-    with app.app_context():  # Ensures that all tables are created in the database if they do not already exist when the app starts. Note: It does not update existing tables; migrations are required for schema changes.
-        db.create_all()
+            
+                "description":"The token is not fresh",
+                "error":"Fresh token required"
+            })
+        )
+
+    # with app.app_context():  # Ensures that all tables are created in the database if they do not already exist when the app starts. Note: It does not update existing tables; migrations are required for schema changes.
+    #     db.create_all()              #commenting this as SQLAlchemy is no longer needed because of migrate databse
 
     
 
