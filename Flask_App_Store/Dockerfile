@@ -3,4 +3,5 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 COPY . /app
+ENV PYTHONPATH="/app"
 CMD ["gunicorn", "--bind", "0.0.0.0:80", "Flask_App_Store.app:create_app()"]
