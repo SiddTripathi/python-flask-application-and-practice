@@ -8,6 +8,7 @@ class PlainItemSchema(Schema):
     id = fields.Int(dump_only=True) #dump_only means that it cannot be part of send request but only be generated and returned
     name = fields.Str(required=True) #data validation
     price=fields.Float(required=True)
+    #description = fields.Str()
     
 
 
