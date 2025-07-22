@@ -12,6 +12,8 @@ from .resources.store import blp as StoreBlueprint
 from .resources.tag import blp as TagBlueprint
 from .resources.users import blp as UserBlueprint
 
+#this is a test
+
 
 def create_app(db_url=None):
     instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance") #--> this ensures folder is created inside current working dir
