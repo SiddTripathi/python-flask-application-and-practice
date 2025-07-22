@@ -12,7 +12,7 @@ from .resources.store import blp as StoreBlueprint
 from .resources.tag import blp as TagBlueprint
 from .resources.users import blp as UserBlueprint
 
-#this is a test
+#this is a test for github
 
 
 def create_app(db_url=None):
