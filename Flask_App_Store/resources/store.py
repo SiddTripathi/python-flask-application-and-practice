@@ -3,12 +3,12 @@ from sqlite3 import IntegrityError
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 
-from ..models.stores import StoreModel
+from models.stores import StoreModel
 from sqlalchemy.exc import SQLAlchemyError
 
-from ..db import db
+from db import db
 
-from ..schemas import StoreSchema
+from schemas import StoreSchema
 
 blp = Blueprint("stores",__name__, description="Operations on stores")
 

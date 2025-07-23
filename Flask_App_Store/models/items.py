@@ -1,6 +1,6 @@
 
 
-from ..db import db
+from db import db
 
 
 #This will act as a mapping between a database row and python class as well as object (json)

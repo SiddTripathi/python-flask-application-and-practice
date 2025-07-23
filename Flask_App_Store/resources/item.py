@@ -3,8 +3,8 @@ from flask_jwt_extended import get_jwt, jwt_required
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
-from ..models.items import ItemModel
-from ..db import db
+from models.items import ItemModel
+from db import db
 
 
 from ..schemas import ItemSchema, ItemUpdateSchema

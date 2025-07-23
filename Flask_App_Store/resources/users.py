@@ -5,12 +5,12 @@ from flask_smorest import Blueprint, abort
 from flask_jwt_extended import create_access_token, get_jwt,jwt_required, create_refresh_token, get_jwt_identity
 import jwt
 
-from ..blocklist import BLOCKLIST
+from blocklist import BLOCKLIST
 
-from ..models.user import UserModel
+from models.user import UserModel
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
-from ..db import db
+from db import db
 
 from ..schemas import UserSchema
 
