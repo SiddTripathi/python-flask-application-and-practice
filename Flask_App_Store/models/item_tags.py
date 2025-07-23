@@ -1,4 +1,4 @@
-from ..db import db
+from db import db
 
 #table to have many to many relatioship between items and tags
 class ItemTags(db.Model):
