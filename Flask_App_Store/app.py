@@ -5,12 +5,12 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from blocklist import BLOCKLIST
 from flask_smorest import Api
-from .db import db
+from db import db
 #from .models import StoreModel, ItemModel
-from .resources.item import blp as ItemBlueprint
-from .resources.store import blp as StoreBlueprint
-from .resources.tag import blp as TagBlueprint
-from .resources.users import blp as UserBlueprint
+from resources.item import blp as ItemBlueprint
+from resources.store import blp as StoreBlueprint
+from resources.tag import blp as TagBlueprint
+from resources.users import blp as UserBlueprint
 
 #this is a test for github
 
