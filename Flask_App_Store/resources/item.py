@@ -7,7 +7,7 @@ from models.items import ItemModel
 from db import db
 
 
-from ..schemas import ItemSchema, ItemUpdateSchema
+from schemas import ItemSchema, ItemUpdateSchema
 
 
 

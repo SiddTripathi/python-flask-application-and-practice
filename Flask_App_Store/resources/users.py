@@ -12,7 +12,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
 from db import db
 
-from ..schemas import UserSchema
+from schemas import UserSchema
 
 
 blp = Blueprint("users",__name__, description="User management")
