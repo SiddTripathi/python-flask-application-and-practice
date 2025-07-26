@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from blocklist import BLOCKLIST
 from flask_smorest import Api
 from db import db
+from dotenv import load_dotenv
 #from .models import StoreModel, ItemModel
 from resources.item import blp as ItemBlueprint
 from resources.store import blp as StoreBlueprint
@@ -18,6 +19,7 @@ from resources.users import blp as UserBlueprint
 def create_app(db_url=None):
     instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance") #--> this ensures folder is created inside current working dir
     app = Flask(__name__, instance_path=instance_path)
+    load_dotenv()
 
 
 
