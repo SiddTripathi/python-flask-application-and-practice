@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from blocklist import BLOCKLIST
 from flask_smorest import Api
+
 from db import db
 from dotenv import load_dotenv
 #from .models import StoreModel, ItemModel
