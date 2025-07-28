@@ -55,7 +55,7 @@ class UserRegister(MethodView):
         from_email='siddharth.asbwork@gmail.com',
         to_emails=user.email,
         subject='Sending with Twilio SendGrid is Fun',
-        html_content='<strong>User has been registered Test</strong>')
+        html_content='<strong>User {user.username} has been registered Successfully</strong>')
         try:
             sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
             # sg.set_sendgrid_data_residency("eu")
