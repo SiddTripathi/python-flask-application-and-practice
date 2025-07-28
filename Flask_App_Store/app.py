@@ -5,7 +5,7 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from blocklist import BLOCKLIST
 from flask_smorest import Api
-
+from models import UserModel
 from db import db
 from dotenv import load_dotenv
 #from .models import StoreModel, ItemModel
@@ -43,17 +43,20 @@ def create_app(db_url=None):
     jwt = JWTManager(app)
 
     """
-`claims` are data we choose to attach to each jwt payload
-and for each jwt protected endpoint, we can retrieve these claims via `get_jwt_claims()`
-one possible use case for claims are access level control, which is shown below
-"""
+    `claims` are data we choose to attach to each jwt payload
+    and for each jwt protected endpoint, we can retrieve these claims via `get_jwt_claims()`
+    one possible use case for claims are access level control, which is shown below
+    """
+        # @jwt.additional_claims_loader
+        # def add_claims_to_jwt(identity):
+        #     print("IDENTITY IN CLAIMS LOADER:", identity, type(identity))
+        #     if str(identity) == "1":
+        #         return{"is_admin": True}
+        #     return{"is_admin": False}
     @jwt.additional_claims_loader
     def add_claims_to_jwt(identity):
-        print("IDENTITY IN CLAIMS LOADER:", identity, type(identity))
-        if str(identity) == "1":
-            return{"is_admin": True}
-        return{"is_admin": False}
-
+        user = UserModel.query.get(identity)
+        return {"is_admin": user.is_admin if user else False}
     @jwt.token_in_blocklist_loader
     def check_if_token_in_blocklist(jwt_header,jwt_payload):
         return jwt_payload["jti"] in BLOCKLIST

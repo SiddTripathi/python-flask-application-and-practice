@@ -47,6 +47,7 @@ class UserSchema(Schema):
 
 class UserRegisterSchema(UserSchema):
     email = fields.Str(required=True)
+    is_admin = fields.Boolean(load_default=False)
 
 class TagItemSchema(Schema):
     message = fields.Str()

@@ -46,7 +46,8 @@ class UserRegister(MethodView):
         user = UserModel(
             username=user_data["username"],
             email = user_data["email"],
-            password = pbkdf2_sha256.hash(user_data["password"])
+            password = pbkdf2_sha256.hash(user_data["password"]),
+            is_admin = user_data["is_admin"]
         )
 
         db.session.add(user)
@@ -55,7 +56,7 @@ class UserRegister(MethodView):
         from_email='siddharth.asbwork@gmail.com',
         to_emails=user.email,
         subject='Sending with Twilio SendGrid is Fun',
-        html_content='<strong>User {user.username} has been registered Successfully</strong>')
+        html_content='<strong>User has been registered Successfully</strong>')
         try:
             sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
             # sg.set_sendgrid_data_residency("eu")
