@@ -45,6 +45,8 @@ class UserSchema(Schema):
     username = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True) #load_only ensures that password is not returned ever to the client
 
+class UserRegisterSchema(UserSchema):
+    email = fields.Str(required=True)
 
 class TagItemSchema(Schema):
     message = fields.Str()

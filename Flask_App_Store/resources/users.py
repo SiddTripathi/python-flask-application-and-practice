@@ -14,7 +14,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
 from db import db
 
-from schemas import UserSchema
+from schemas import UserSchema, UserRegisterSchema
 
 
 blp = Blueprint("users",__name__, description="User management")
@@ -39,12 +39,13 @@ class GetUser(MethodView):
 
 @blp.route("/register")
 class UserRegister(MethodView):
-    @blp.arguments(UserSchema)
+    @blp.arguments(UserRegisterSchema())
     def post(self,user_data):
         if UserModel.query.filter(UserModel.username==user_data["username"]).first():
             abort(409, message="Username has been taken, try a new one")
         user = UserModel(
             username=user_data["username"],
+            email = user_data["email"],
             password = pbkdf2_sha256.hash(user_data["password"])
         )
 
@@ -52,7 +53,7 @@ class UserRegister(MethodView):
         db.session.commit()
         message = Mail(
         from_email='siddharth.asbwork@gmail.com',
-        to_emails='siddhart.tripathi@gmail.com',
+        to_emails=user.email,
         subject='Sending with Twilio SendGrid is Fun',
         html_content='<strong>User has been registered Test</strong>')
         try:
