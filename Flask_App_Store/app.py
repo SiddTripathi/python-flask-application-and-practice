@@ -1,5 +1,6 @@
 
 import os
+import redis
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
@@ -7,6 +8,7 @@ from blocklist import BLOCKLIST
 from flask_smorest import Api
 from models import UserModel
 from db import db
+from rq import Queue
 from dotenv import load_dotenv
 #from .models import StoreModel, ItemModel
 from resources.item import blp as ItemBlueprint
@@ -20,11 +22,14 @@ from resources.users import blp as UserBlueprint
 def create_app(db_url=None):
     instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance") #--> this ensures folder is created inside current working dir
     app = Flask(__name__, instance_path=instance_path)
-    #load_dotenv()
+    load_dotenv()
+    connection = redis.from_url(
+        os.getenv("REDIS_URL")
+    )
 
 
 
-
+    app.queue = Queue("emails",connection=connection)
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Stores REST API"
     app.config["API_VERSION"] = "v1"

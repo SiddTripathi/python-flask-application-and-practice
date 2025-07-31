@@ -1,5 +1,6 @@
 from sqlite3 import IntegrityError
 import os
+from flask import current_app
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from flask_jwt_extended import create_access_token, get_jwt,jwt_required, create_refresh_token, get_jwt_identity
@@ -8,7 +9,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 from blocklist import BLOCKLIST
-
+from tasks import send_user_registration_email
 from models.user import UserModel
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
@@ -52,22 +53,7 @@ class UserRegister(MethodView):
 
         db.session.add(user)
         db.session.commit()
-        message = Mail(
-        from_email='siddharth.asbwork@gmail.com',
-        to_emails=user.email,
-        subject='Sending with Twilio SendGrid is Fun',
-        html_content='<strong>User has been registered Successfully</strong>')
-        try:
-            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-            # sg.set_sendgrid_data_residency("eu")
-            # uncomment the above line if you are sending mail using a regional EU subuser
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
-        except Exception as e:
-            print(str(e))
-
+        current_app.queue.enqueue(send_user_registration_email,user.email,user.username)
         return {"message": f"User {user.username} created successfully"}, 201
 
 @blp.route("/login")
